@@ -1,0 +1,99 @@
+function myFunction() {
+
+var thread = GmailApp.getInboxThreads(0,5); 
+var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+   
+    for (i=0; i<thread.length ; i++){  
+  
+        var threadName = thread[i].getFirstMessageSubject();
+  
+        if (thread[i].isUnread()){
+  
+           if (threadName === "【Uplive】daily metrics of MY(新马区)"){
+              var message = thread[i].getMessages()[0];
+              var body = message.getPlainBody();
+              Logger.log(body)
+  
+              var ss = SpreadsheetApp.getActiveSpreadsheet();
+              var sheet = ss.getSheets()[0];
+              sheet.appendRow([body]);
+              thread[i].markRead();
+           }
+           else
+           {
+                 if (threadName === "【Uplive】主播数据-MY"){ 
+                     var message = thread[i].getMessages()[0];
+                     var body = message.getPlainBody();
+                     var ss = SpreadsheetApp.getActiveSpreadsheet();
+                     var sheetU = ss.getSheetByName("HostUcoins")
+                     sheetU.appendRow([body]);
+                     
+                     thread[i].markRead()
+                 }
+                 else
+                 {
+                       if (threadName === "【Uplive】主播数据-SG"){ 
+                       var message = thread[i].getMessages()[0];
+                       var body = message.getPlainBody();
+                       var ss = SpreadsheetApp.getActiveSpreadsheet();
+                       var sheetS = ss.getSheetByName("HostSG") 
+                       sheetS.appendRow([body]);
+                       thread[i].markRead()
+                       }
+                  
+                  }     
+                            
+                          
+                         
+                 
+             }
+         }
+      }
+     sendEmail()
+} 
+
+function sendEmail(){ 
+    
+    
+
+    
+   
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheetD = ss.getSheetByName("DailyHost")
+    var dailyD = sheetD.getRange("A1:F3").getValues()
+    var myDaily = dailyD[0]
+    var sgDaily = dailyD[1]
+    var sumDaily = dailyD[2]
+    var newDay = sumDaily[0].getDate().toFixed(0);
+    var newMonth = ((sumDaily[0].getMonth()) + 1).toFixed(0)
+    var newDateCN = newMonth + "月" + newDay + "日" 
+    var reloadTotal = myDaily[0] + sgDaily[0]
+     
+    var newDayMessage =  newDateCN + "\n" +
+                        "新马区总开播人数为" + sumDaily[1] + "，" + "\n" + 
+                        "（秀场" + sumDaily[4] + "人，素人" + sumDaily[5] + "人）" + "\n" + 
+                        "时常为" + sumDaily[2].toFixed(2) + "，" + "\n" + 
+                        "U币收入为" + sumDaily[3] + "，" + "\n" +
+                        "充值金额为" + reloadTotal + "；" + "\n" + 
+                        "马来区开播人数为" + myDaily[1] + "，" + "\n" + 
+                        "（秀场" + myDaily[4] + "人，素人" + myDaily[5] + "人）" + "\n" +
+                        "时常为" + myDaily[2].toFixed(2) + "，" + "\n" +
+                        "U币收入为" + myDaily[3] + "，" + "\n" + 
+                        "充值金额为" + myDaily[0] + "；" + "\n" + 
+                        "新加坡区开播人数为" + sgDaily[1] + "，" + "\n" +
+                        "（秀场" + sgDaily[4] + "人，素人" + sgDaily[5] + "人）" + "\n" +
+                        "时常为"  + sgDaily[2].toFixed(2) + "，" + "\n" + 
+                        "U币收入为" + sgDaily[3] + "，" + "\n" +
+                        "充值金额为" + sgDaily[0]
+   
+                        
+                        
+   Logger.log(newDayMessage)
+   GmailApp.sendEmail("cliffordlee312@gmail.com", newDateCN, newDayMessage) 
+
+  
+}
+    
+   
+
