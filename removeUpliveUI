@@ -1,0 +1,9 @@
+for (i = 0; i < document.querySelectorAll("img").length; i++) { 
+  document.querySelectorAll("img")[i].style.display="none"}
+document.getElementsByClassName('guard-info')[0].style.display="none"
+document.getElementsByClassName('live-anim-btn')[0].style.display="none"
+document.getElementsByClassName('living-panel-anim')[0].style.display="none"
+document.querySelectorAll('div.uplivecode')[0].innerText=" "
+document.getElementsByClassName('startTime')[0].style.display="none"
+document.getElementById('likeAnimCanvas').style.display="none"
+document.getElementsByClassName('fullscreen-anim')[0].style.display="none"
